@@ -5,6 +5,8 @@ from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.database import Base
 
+from sqlalchemy import Enum
+from app.models.enums import Visibility
 
 class Echo(Base):
     __tablename__ = "echoes"
@@ -36,9 +38,10 @@ class Echo(Base):
         nullable=False,
     )
 
-    visibility: Mapped[str] = mapped_column(
-        String(20),
-        default="public",
+    visibility: Mapped[Visibility] = mapped_column(
+        Enum(Visibility),
+        default=Visibility.PUBLIC,
+        nullable=False,
     )
 
     image_url: Mapped[str | None] = mapped_column(
