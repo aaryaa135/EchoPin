@@ -19,5 +19,3 @@ engine = create_engine(
 
 # Import models so SQLAlchemy registers them
 import app.models  # noqa: E402,F401
-
-Base.metadata.create_all(bind=engine)
