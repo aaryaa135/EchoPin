@@ -1,5 +1,7 @@
 from sqlalchemy import create_engine
+
 from app.core.settings import settings
+from app.db.base import Base
 
 DATABASE_URL = (
     f"postgresql+psycopg://"
@@ -14,3 +16,8 @@ engine = create_engine(
     DATABASE_URL,
     echo=True,
 )
+
+# Import models so SQLAlchemy registers them
+import app.models  # noqa: E402,F401
+
+Base.metadata.create_all(bind=engine)
