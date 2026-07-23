@@ -5,6 +5,7 @@ from app.core.settings import settings
 from app.db.database import engine
 from app.api.v1.auth import router as auth_router
 from app.api.v1.users import router as users_router
+from app.api.v1.echoes import router as echoes_router
 
 app = FastAPI(
     title=settings.APP_NAME,
@@ -40,3 +41,5 @@ def database_check():
 
 app.include_router(auth_router)
 app.include_router(users_router)
+app.include_router(echoes_router)
+
