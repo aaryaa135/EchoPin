@@ -6,6 +6,11 @@ from app.models.user import User
 from app.schemas.echo import EchoCreate, EchoResponse
 from app.security.dependencies import get_current_user
 from app.services.echo_service import EchoService
+from app.schemas.pagination import PaginatedEchoResponse
+
+from typing import Annotated
+
+from fastapi import Query
 
 router = APIRouter(
     prefix="/echoes",
@@ -27,4 +32,34 @@ def create_echo(
         db=db,
         echo_data=echo,
         creator_id=current_user.id,
+    )
+
+@router.get(
+    "",
+    response_model=PaginatedEchoResponse
+)
+def get_echoes(
+    page: Annotated[int, Query(ge=1)] = 1,
+    limit: Annotated[int, Query(ge=1, le=50)] = 10,
+    db: Session = Depends(get_db),
+):
+
+    return EchoService.get_all_echoes(
+        db=db,
+        page=page,
+        limit=limit,
+    )
+
+@router.get(
+    "/{echo_id}",
+    response_model=EchoResponse,
+)
+def get_echo(
+    echo_id: int,
+    db: Session = Depends(get_db),
+):
+
+    return EchoService.get_echo_by_id(
+        db=db,
+        echo_id=echo_id,
     )

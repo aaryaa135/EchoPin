@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
-
+from sqlalchemy import select
 from app.models.echo import Echo
 from app.schemas.echo import EchoCreate
-
+from sqlalchemy import func, select
 
 class EchoRepository:
 
@@ -28,3 +28,34 @@ class EchoRepository:
         db.refresh(echo)
 
         return echo
+
+    @staticmethod
+    def get_all(
+        db,
+        skip: int,
+        limit: int,
+    ):
+        stmt = (
+            select(Echo)
+            .order_by(Echo.created_at.desc())
+            .offset(skip)
+            .limit(limit)
+        )
+
+        return db.execute(stmt).scalars().all()
+
+    @staticmethod
+    def count(db):
+
+        stmt = select(func.count()).select_from(Echo)
+
+        return db.scalar(stmt)
+
+    @staticmethod
+    def get_by_id(
+        db,
+        echo_id: int,
+    ):
+        stmt = select(Echo).where(Echo.id == echo_id)
+
+        return db.execute(stmt).scalar_one_or_none()
