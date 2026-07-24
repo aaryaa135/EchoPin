@@ -60,3 +60,13 @@ class EchoRepository:
 
         return db.execute(stmt).scalar_one_or_none()
 
+    @staticmethod
+    def update(
+        db,
+        echo,
+    ):
+        db.add(echo)
+        db.commit()
+        db.refresh(echo)
+
+        return echo

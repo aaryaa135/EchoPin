@@ -7,6 +7,7 @@ from app.schemas.echo import EchoCreate, EchoResponse
 from app.security.dependencies import get_current_user
 from app.services.echo_service import EchoService
 from app.schemas.pagination import PaginatedEchoResponse
+from app.schemas.echo import EchoUpdate
 
 from typing import Annotated
 
@@ -61,4 +62,22 @@ def get_echo(
     return EchoService.get_echo_by_id(
         db=db,
         echo_id=echo_id,
+    )
+
+@router.patch(
+    "/{echo_id}",
+    response_model=EchoResponse,
+)
+def update_echo(
+    echo_id: int,
+    echo_data: EchoUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+
+    return EchoService.update_echo(
+        db=db,
+        echo_id=echo_id,
+        echo_data=echo_data,
+        current_user=current_user,
     )

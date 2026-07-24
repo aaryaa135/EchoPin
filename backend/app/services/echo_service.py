@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from app.repositories.echo_repository import EchoRepository
 from app.schemas.echo import EchoCreate
 from fastapi import HTTPException, status
+from app.schemas.echo import EchoUpdate
+from app.models.user import User
 
 class EchoService:
 
@@ -61,3 +63,38 @@ class EchoService:
             )
 
         return echo
+
+    @staticmethod
+    def update_echo(
+        db,
+        echo_id: int,
+        echo_data: EchoUpdate,
+        current_user: User,
+    ):
+
+        echo = EchoRepository.get_by_id(
+            db=db,
+            echo_id=echo_id,
+        )
+
+        if echo is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Echo not found.",
+            )
+
+        if echo.creator_id != current_user.id:
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail="You are not allowed to update this Echo.",
+            )
+
+        update_data = echo_data.model_dump(exclude_unset=True)
+
+        for field, value in update_data.items():
+            setattr(echo, field, value)
+
+        return EchoRepository.update(
+            db=db,
+            echo=echo,
+        )

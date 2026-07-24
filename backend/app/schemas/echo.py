@@ -35,6 +35,36 @@ class EchoCreate(BaseModel):
     visibility: Visibility = Visibility.PUBLIC
 
 
+class EchoUpdate(BaseModel):
+    title: str | None = Field(default=None, min_length=3, max_length=100)
+
+    description: str | None = Field(
+        default=None,
+        min_length=5,
+        max_length=1000,
+    )
+
+    latitude: float | None = Field(
+        default=None,
+        ge=-90,
+        le=90,
+    )
+
+    longitude: float | None = Field(
+        default=None,
+        ge=-180,
+        le=180,
+    )
+
+    location_name: str | None = Field(
+        default=None,
+        min_length=2,
+        max_length=255,
+    )
+
+    visibility: Visibility | None = None
+
+
 class EchoResponse(BaseModel):
     id: int
     title: str
