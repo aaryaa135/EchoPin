@@ -58,7 +58,6 @@ def get_echo(
     echo_id: int,
     db: Session = Depends(get_db),
 ):
-
     return EchoService.get_echo_by_id(
         db=db,
         echo_id=echo_id,

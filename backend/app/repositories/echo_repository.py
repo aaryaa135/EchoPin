@@ -2,7 +2,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import select
 from app.models.echo import Echo
 from app.schemas.echo import EchoCreate
-from sqlalchemy import func, select
+from sqlalchemy import func
 
 class EchoRepository:
 
@@ -59,3 +59,4 @@ class EchoRepository:
         stmt = select(Echo).where(Echo.id == echo_id)
 
         return db.execute(stmt).scalar_one_or_none()
+
