@@ -39,7 +39,10 @@ class Echo(Base):
     )
 
     visibility: Mapped[Visibility] = mapped_column(
-        Enum(Visibility),
+        Enum(
+            Visibility,
+            values_callable=lambda enum: [e.value for e in enum],
+        ),
         default=Visibility.PUBLIC,
         nullable=False,
     )
