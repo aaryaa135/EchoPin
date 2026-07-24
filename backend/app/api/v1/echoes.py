@@ -8,6 +8,7 @@ from app.security.dependencies import get_current_user
 from app.services.echo_service import EchoService
 from app.schemas.pagination import PaginatedEchoResponse
 from app.schemas.echo import EchoUpdate
+from fastapi import Response, status
 
 from typing import Annotated
 
@@ -81,3 +82,21 @@ def update_echo(
         echo_data=echo_data,
         current_user=current_user,
     )
+
+@router.delete(
+    "/{echo_id}",
+    status_code=status.HTTP_204_NO_CONTENT,
+)
+def delete_echo(
+    echo_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+
+    EchoService.delete_echo(
+        db=db,
+        echo_id=echo_id,
+        current_user=current_user,
+    )
+
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

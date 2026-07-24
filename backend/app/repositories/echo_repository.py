@@ -70,3 +70,11 @@ class EchoRepository:
         db.refresh(echo)
 
         return echo
+
+    @staticmethod
+    def delete(
+        db,
+        echo,
+    ):
+        db.delete(echo)
+        db.commit()
